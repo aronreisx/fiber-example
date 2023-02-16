@@ -60,4 +60,32 @@ func UseBooksRoute(router fiber.Router) {
 			"books" books,
 		})
 	})
+
+	router.Put("/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Request error",
+			})
+		}
+
+		type Request struct {
+			Title string
+		}
+
+		var body Request
+
+		c.BodyParser(&body)
+
+		for _, book := range books {
+			if book.Id == id {
+				book.Title = body.Title
+			}
+		}
+
+		return c.JSON(fiber.Map{
+			"books": books,
+		})
+	})
 }
