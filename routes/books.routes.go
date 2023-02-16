@@ -88,4 +88,24 @@ func UseBooksRoute(router fiber.Router) {
 			"books": books,
 		})
 	})
+
+	router.Delete("/:id", func(c *fiber.Ctx) error {
+		id, err := c.ParamsInt("id")
+
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Request error",
+			})
+		}
+
+		for index, book := range books {
+			if book.Id == id {
+				books = append(books[0:index], books[index + 1:]...)
+			}
+		}
+
+		return c.JSON(fiber.Map{
+			"books": books,
+		})
+	})
 }
