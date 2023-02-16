@@ -38,4 +38,26 @@ func UseBooksRoute(router fiber.Router) {
 			"book": bookFound,
 		})
 	})
+
+	router.Post("/", func(c *fiber.Ctx) error {
+		type Request struct {
+			Title string
+			Id int
+		}
+
+		var body Request
+
+		c.BodyParser(&body)
+
+		newBook := Book {
+			Title: body.Title,
+			Id: len(books) + 1,
+		}
+
+		books = append(books, &newBook)
+
+		return c.JSON(fiber.Map{
+			"books" books,
+		})
+	})
 }
